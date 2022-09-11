@@ -10,8 +10,12 @@ export default function MyWallet () {
     const navigate = useNavigate();
     const nome = 'Robinson';
 
-    function toLogin () {
-        navigate('/');
+    function toNewEntry () {
+        navigate('/NewEntry');
+    }
+
+    function toNewExit () {
+        navigate('/NewExit');
     }
 
     return (
@@ -25,11 +29,11 @@ export default function MyWallet () {
                     <span>Não há registros de entrada ou saida</span>
                 </EmptyWallet>
                 <Options>
-                    <div>
+                    <div onClick={toNewEntry}>
                         <img src={plus} />
                         <span>Nova entrada</span>
                     </div>
-                    <div>
+                    <div onClick={toNewEntry}>
                         <img src={minus} />
                         <span>Nova saída</span>
                     </div>
