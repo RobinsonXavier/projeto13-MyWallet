@@ -6,6 +6,7 @@ import '../styles/global.css';
 
 import Login from './Login';
 import Signup from './Singup';
+import MyWallet from './MyWallet';
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />} />
         <Route path='/Signup' element={<Signup />} />
+        <Route path='/MyWallet' element={<MyWallet />} />
+
       </Routes>
     </BrowserRouter>
   );
