@@ -2,32 +2,37 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-export default function Login () {
+export default function Signup () {
     const navigate = useNavigate();
 
-    function toSignup () {
-        navigate('/Signup');
+    function toLogin () {
+        navigate('/');
     }
+
     return (
         <>
-            <LoginPage>
+            <SignupPage>
                 <div>
                     <h1>MyWallet</h1>
                 </div>
                 <form>
                     <input
+                    placeholder="Nome" />
+                    <input
                     placeholder="E-mail" />
                     <input
                     placeholder="Senha" />
-                    <ButtonLogin>Entrar</ButtonLogin>
-                    <ButtonSignup onClick={toSignup} >Primeira vez? Cadastre-se</ButtonSignup>
+                    <input
+                    placeholder="Confirme a senha" />
+                    <ButtonSignup>Cadastrar</ButtonSignup>
+                    <ButtonToLogin onClick={toLogin}>Já tem uma conta? Entre agora!</ButtonToLogin>
                 </form>
-            </LoginPage>
+            </SignupPage>
         </>
     )
 };
 
-const LoginPage = styled.div`
+const SignupPage = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -66,7 +71,7 @@ const LoginPage = styled.div`
     }
 `;
 
-const ButtonLogin = styled.button`
+const ButtonSignup = styled.button`
     background-color: #A328D6;
     width: 326px;
     height: 46px;
@@ -79,7 +84,7 @@ const ButtonLogin = styled.button`
     border: none;
 `;
 
-const ButtonSignup = styled.button`
+const ButtonToLogin = styled.button`
     background-color: #8C11BE;
     font-family: 'Raleway', sans-serif;
     font-size: 15px;
