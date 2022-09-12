@@ -13,32 +13,62 @@ export default function Signup () {
         })
     }
 
-    function SignUp (ev) {
+    function signUpUser (ev) {
         ev.preventDefault();
 
+        const request = axios.post('http://localhost:5000/sign-up', form);
+
+        request.catch( error => {
+            alert(`preencha os dados corretamente (${error.message})`)
+        });
+
+        request.then(() => {
+            alert('Usuário criado com sucesso!');
+            navigate('/');
+        })
 
     }
 
     function toLogin () {
         navigate('/');
     }
-
+    console.log(form);
     return (
         <>
             <SignupPage>
                 <div>
                     <h1>MyWallet</h1>
                 </div>
-                <form>
+                <form onSubmit={signUpUser}>
                     <input
-                    placeholder="Nome" />
+                    placeholder="Nome"
+                    type='text'
+                    value={form.name}
+                    name='name'
+                    onChange={handleForm}
+                    required />
                     <input
-                    placeholder="E-mail" />
+                    placeholder="E-mail"
+                    type='email'
+                    value={form.email}
+                    name='email'
+                    onChange={handleForm}
+                    required />
                     <input
-                    placeholder="Senha" />
+                    placeholder="Senha"
+                    type='password'
+                    value={form.password}
+                    name='password'
+                    onChange={handleForm}
+                    required />
                     <input
-                    placeholder="Confirme a senha" />
-                    <ButtonSignup>Cadastrar</ButtonSignup>
+                    placeholder="Confirme a senha"
+                    type='password'
+                    value={form.confirmPassword}
+                    name='confirmPassword'
+                    onChange={handleForm}
+                    required />
+                    <ButtonSignup type="submit" >Cadastrar</ButtonSignup>
                     <ButtonToLogin onClick={toLogin}>Já tem uma conta? Entre agora!</ButtonToLogin>
                 </form>
             </SignupPage>

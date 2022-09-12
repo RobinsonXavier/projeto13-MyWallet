@@ -1,14 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
 
 import back from '../assets/images/back.svg';
 import minus from '../assets/images/minus.svg';
 import plus from '../assets/images/plus.svg';
 
-export default function MyWallet () {
+export default function MyWallet ({user, token}) {
     const navigate = useNavigate();
-    const nome = 'Robinson';
+    const [values, setValues] = useState([]);
+
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }
+
+    useEffect(() => {
+        getValues();
+    }, []);
+
+
+    function getValues () {
+
+        const promise = axios.get('http://localhost:5000/values', config);
+
+        promise.catch(error => console.log(error.message));
+
+        promise.then(response => setValues(response));
+    };
 
     function toNewEntry () {
         navigate('/NewEntry');
@@ -22,7 +43,7 @@ export default function MyWallet () {
         <>
             <MyWalletPage>
                 <div>
-                    <h1>Olá, {`${nome}`}</h1>
+                    <h1>Olá, {`${user.name}`}</h1>
                     <img src={back} alt = 'button-back' />
                 </div>
                 <EmptyWallet>
@@ -33,7 +54,7 @@ export default function MyWallet () {
                         <img src={plus} />
                         <span>Nova entrada</span>
                     </div>
-                    <div onClick={toNewEntry}>
+                    <div onClick={toNewExit}>
                         <img src={minus} />
                         <span>Nova saída</span>
                     </div>

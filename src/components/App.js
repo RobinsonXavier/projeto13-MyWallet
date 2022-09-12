@@ -24,7 +24,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Login getData={getData} />} />
         <Route path='/Signup' element={<Signup />} />
-        <Route path='/MyWallet' element={<MyWallet />} />
+        <Route path='/MyWallet' element={<MyWallet user={user} token={token} />} />
         <Route path='/NewEntry' element={<NewEntry />} />
         <Route path='/NewExit' element={<NewExit />} />
 
