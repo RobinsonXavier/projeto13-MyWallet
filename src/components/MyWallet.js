@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -10,6 +10,7 @@ import plus from '../assets/images/plus.svg';
 export default function MyWallet ({user, token}) {
     const navigate = useNavigate();
     const [values, setValues] = useState([]);
+    const {valueId} = useParams();
 
     const config = {
         headers: {
@@ -24,11 +25,11 @@ export default function MyWallet ({user, token}) {
 
     function getValues () {
 
-        const promise = axios.get('http://localhost:5000/values', config);
+        const promise = axios.get(`http://localhost:5000/values/${valueId}`, config);
 
         promise.catch(error => console.log(error.message));
 
-        promise.then(response => setValues(response));
+        promise.then(response => setValues(response.data));
     };
 
     function toNewEntry () {

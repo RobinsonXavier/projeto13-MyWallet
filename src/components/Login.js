@@ -25,7 +25,7 @@ export default function Login ({getData}) {
 
         request.then((response) => {
             getData(response);
-            navigate('/MyWallet');
+            navigate(`/MyWallet/${response.data.id}`);
         })
     }
 
