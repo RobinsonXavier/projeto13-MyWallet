@@ -1,9 +1,38 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
 
-export default function Login () {
+
+export default function Login ({getData}) {
     const navigate = useNavigate();
+    const [login, setLogin] = useState({});
+
+    function handleLogin (ev) {
+        setLogin({
+            ...login, [ev.target.name]: ev.target.value,
+        })
+    }
+
+    function loginIn (ev) {
+        ev.preventDefault();
+
+        const request = axios.post('http://localhost:5000/sign-in', login);
+
+        request.catch(error => {
+            getError(error);
+        })
+
+        request.then((response) => {
+            getData(response);
+            navigate('/MyWallet');
+        })
+    }
+
+    function getError (e) {
+        alert(`Um erro ocorreu, verifique seu login e senha(${e.message})`);
+    }
+
 
     function toSignup () {
         navigate('/Signup');
@@ -14,12 +43,22 @@ export default function Login () {
                 <div>
                     <h1>MyWallet</h1>
                 </div>
-                <form>
+                <form onSubmit={loginIn}>
                     <input
-                    placeholder="E-mail" />
+                    placeholder="E-mail"
+                    type='email'
+                    value={login.email}
+                    name='email'
+                    onChange={handleLogin}
+                    required />
                     <input
-                    placeholder="Senha" />
-                    <ButtonLogin>Entrar</ButtonLogin>
+                    placeholder="Senha"
+                    type='password'
+                    value={login.password}
+                    name='password'
+                    onChange={handleLogin}
+                    required />
+                    <ButtonLogin type="submit" >Entrar</ButtonLogin>
                     <ButtonSignup onClick={toSignup} >Primeira vez? Cadastre-se</ButtonSignup>
                 </form>
             </LoginPage>

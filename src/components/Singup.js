@@ -1,9 +1,23 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
 
 export default function Signup () {
     const navigate = useNavigate();
+    const [form, setForm] = useState({});
+
+    function handleForm (ev) {
+        setForm({
+            ...form, [ev.target.name]: ev.target.value,
+        })
+    }
+
+    function SignUp (ev) {
+        ev.preventDefault();
+
+
+    }
 
     function toLogin () {
         navigate('/');

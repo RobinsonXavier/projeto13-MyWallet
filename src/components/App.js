@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 import '../styles/reset.css';
@@ -11,10 +11,18 @@ import NewEntry from './NewEntry';
 import NewExit from './NewExit';
 
 function App() {
+  const [user, setUser] = useState({});
+  const [token, setToken] = useState('');
+
+  function getData (response) {
+    setUser(response.data);
+    setToken(response.data.token);
+  }
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Login />} />
+        <Route path='/' element={<Login getData={getData} />} />
         <Route path='/Signup' element={<Signup />} />
         <Route path='/MyWallet' element={<MyWallet />} />
         <Route path='/NewEntry' element={<NewEntry />} />
