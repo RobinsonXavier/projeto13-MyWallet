@@ -3,18 +3,26 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 
+import Values from "./Values";
+
 import back from '../assets/images/back.svg';
 import minus from '../assets/images/minus.svg';
 import plus from '../assets/images/plus.svg';
 
-export default function MyWallet ({user, token, config}) {
+export default function MyWallet ({user, token}) {
     const navigate = useNavigate();
     const [values, setValues] = useState([]);
     const {valueId} = useParams();
-    
+    const [sum, setSum] = useState(0); 
+
+    useEffect(() => {
+        setInterval(online, 5000);
+    },[])
+
     const config = {
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'user': `${valueId}`
         }
       }
 
@@ -22,6 +30,17 @@ export default function MyWallet ({user, token, config}) {
         getValues();
     }, []);
 
+    function online () {
+
+        const request = axios.post('http://localhost:5000/status',{}, config);
+
+        request.catch(error => console.log(error.message));
+
+        request.then(() => {
+            console.log('atualizado')
+        })
+
+    };
 
     function getValues () {
 
@@ -29,7 +48,12 @@ export default function MyWallet ({user, token, config}) {
 
         promise.catch(error => console.log(error.message));
 
-        promise.then(response => setValues(response.data));
+        promise.then(response => {
+            let total = 0;
+            response.data.map(element => total = total + Number(element.value));
+            setSum(total);
+            setValues(response.data)
+        });
     };
 
     function toNewEntry () {
@@ -40,16 +64,32 @@ export default function MyWallet ({user, token, config}) {
         navigate('/NewExit');
     }
 
+    function backToLogin () {
+        navigate('/');
+    }
+
     return (
         <>
             <MyWalletPage>
                 <div>
                     <h1>Olá, {`${user.name}`}</h1>
-                    <img src={back} alt = 'button-back' />
+                    <img onClick={backToLogin} src={back} alt = 'button-back' />
                 </div>
+                {values.length === 0 ?
                 <EmptyWallet>
                     <span>Não há registros de entrada ou saida</span>
                 </EmptyWallet>
+                :
+                <Wallet>
+                    {values.map( element => <Values time={element.time} description={element.description}
+                    value={element.value} type={element.type} ></Values>)}
+                    <FinalValue>
+                        <h1>SALDO</h1>
+                        {sum >= 0 ? <Entry>{sum}</Entry> : <Exit>{sum.toString().replace('-', '')}</Exit>}
+                    </FinalValue>
+                </Wallet>
+                }
+                
                 <Options>
                     <div onClick={toNewEntry}>
                         <img src={plus} />
@@ -118,9 +158,33 @@ const EmptyWallet = styled.div`
     
 `;
 
+const Wallet = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: start !important;
+    align-items: center;
+    background-color: #ffffff;
+    width: 90% !important;
+    height: 60vh;
+    margin: 0 20px;
+    border-radius: 5px;
+    padding-top: 5px;
+    
+    span {
+        text-align: center;
+        color: #868686;
+        font-family: 'Raleway', sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+    }
+    
+`;
+
 const Options = styled.div`
     display: flex;
     width: 90% !important;
+    margin-bottom: 15px;
     & > div {
         display: flex;
         flex-direction: column;
@@ -141,4 +205,45 @@ const Options = styled.div`
     
 `;
 
+const FinalValue = styled.div`
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px !important;
+    color: #000000;
+    font-weight: 400;
+    width: 90%;
+    margin-bottom: 15px;
+    bottom: -20px;
 
+    span {
+        font-family: 'Raleway', sans-serif;
+        font-size: 16px !important;
+        color: #C6C6C6;
+        font-weight: 400;
+    }
+
+    h1 {
+        font-family: 'Raleway', sans-serif !important;
+        color: #000000 !important;
+        font-size: 17px !important;
+        font-weight: 700 !important;
+        margin: 0 !important;
+    }
+    
+`;
+
+const Entry = styled.p`
+    color: #03AC00;
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px !important;
+    font-weight: 400;
+`;
+
+const Exit = styled.p`
+    color: #C70000;
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px !important;
+    font-weight: 400;
+`;
