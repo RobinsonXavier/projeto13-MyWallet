@@ -19,14 +19,16 @@ function App() {
     setToken(response.data.token);
   }
 
+  console.log(config);
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Login getData={getData} />} />
         <Route path='/Signup' element={<Signup />} />
-        <Route path='/MyWallet/:valueId' element={<MyWallet user={user} token={token} />} />
-        <Route path='/NewEntry' element={<NewEntry />} />
-        <Route path='/NewExit' element={<NewExit />} />
+        <Route path='/MyWallet/:valueId' element={<MyWallet user={user} token={token} config={config} />} />
+        <Route path='/NewEntry' element={<NewEntry token={token} user={user} />} />
+        <Route path='/NewExit' element={<NewExit token={token} user={user} />} />
 
       </Routes>
     </BrowserRouter>

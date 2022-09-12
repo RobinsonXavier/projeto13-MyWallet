@@ -1,10 +1,36 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 
-export default function NewExit () {
+export default function NewExit ({token, user}) {
     const navigate = useNavigate();
+    const [form, setForm] = useState({});
+
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    }
+
+    function handleForm (ev) {
+        setForm({
+            ...form, [ev.target.name]: ev.target.value,
+        })
+    }
+
+    function newExitValue(ev) {
+        ev.preventDefault();
+
+        const request = axios.post('http://localhost:5000/values', 
+        {...form,
+        type: 'exit',
+        userId: user.id}, config);
+
+        request.catch(error =>  alert(`preencha os dados corretamente (${error.message})`));
+
+        request.then( response => navigate(`/MyWallet/${user.id}`));
+    }
 
     function toSignup () {
         navigate('/Signup');
@@ -15,12 +41,22 @@ export default function NewExit () {
                 <div>
                     <h1>Nova saída</h1>
                 </div>
-                <form>
+                <form onSubmit={newExitValue}>
+                <input
+                    placeholder="Valor"
+                    type='number'
+                    value={form.value}
+                    name='value'
+                    onChange={handleForm}
+                    required  />
                     <input
-                    placeholder="Valor" />
-                    <input
-                    placeholder="Descrição" />
-                    <SaveExit>Salvar saída</SaveExit>
+                    placeholder="Descrição"
+                    type='text'
+                    value={form.description}
+                    name='description'
+                    onChange={handleForm}
+                    required />
+                    <SaveExit type="submit" >Salvar saída</SaveExit>
                 </form>
             </NewExitPage>
         </>

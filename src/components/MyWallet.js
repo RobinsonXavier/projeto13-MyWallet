@@ -7,16 +7,16 @@ import back from '../assets/images/back.svg';
 import minus from '../assets/images/minus.svg';
 import plus from '../assets/images/plus.svg';
 
-export default function MyWallet ({user, token}) {
+export default function MyWallet ({user, token, config}) {
     const navigate = useNavigate();
     const [values, setValues] = useState([]);
     const {valueId} = useParams();
-
+    
     const config = {
         headers: {
             'Authorization': `Bearer ${token}`
         }
-    }
+      }
 
     useEffect(() => {
         getValues();

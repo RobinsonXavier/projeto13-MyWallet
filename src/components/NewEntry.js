@@ -1,10 +1,37 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
 
 
-export default function NewEntry () {
+export default function NewEntry ({token, user}) {
     const navigate = useNavigate();
+    const [form, setForm] = useState({});
+
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+      }
+
+    function handleForm (ev) {
+        setForm({
+            ...form, [ev.target.name]: ev.target.value,
+        })
+    }
+
+    function newEntryValue(ev) {
+        ev.preventDefault();
+
+        const request = axios.post('http://localhost:5000/values', 
+        {...form,
+        type: 'entry',
+        userId: user.id}, config);
+
+        request.catch(error =>  alert(`preencha os dados corretamente (${error.message})`));
+
+        request.then( response => navigate(`/MyWallet/${user.id}`))
+    }
 
     function toSignup () {
         navigate('/Signup');
@@ -15,12 +42,22 @@ export default function NewEntry () {
                 <div>
                     <h1>Nova entrada</h1>
                 </div>
-                <form>
+                <form onSubmit={newEntryValue}>
                     <input
-                    placeholder="Valor" />
+                    placeholder="Valor"
+                    type='number'
+                    value={form.value}
+                    name='value'
+                    onChange={handleForm}
+                    required  />
                     <input
-                    placeholder="Descrição" />
-                    <SaveEntry>Salvar entrada</SaveEntry>
+                    placeholder="Descrição"
+                    type='text'
+                    value={form.description}
+                    name='description'
+                    onChange={handleForm}
+                    required />
+                    <SaveEntry type="submit">Salvar entrada</SaveEntry>
                 </form>
             </NewEntryPage>
         </>
